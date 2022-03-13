@@ -1,9 +1,8 @@
 # Binnet-CUDA
 Experiments with _Binarized Neural Networks_ in _Pytorch_.
 
-The code provides basic tools for building binarized neural network as well
-as custom CUDA kernel for faster inference. It contains most of the
-ideas introduced in
+The code provides easy and clean implementation of Binarized Neural Netwoks with custom CUDA kernel for forward pass.
+It contains main ideas introduced in
 [Binarized Neural Networks paper](https://papers.nips.cc/paper/2016/file/d8330f857a17c53d217014ee776bfd50-Paper.pdf).
 
 The only layer available right now is `BinaryLinear` which performs
@@ -30,7 +29,7 @@ CXX=g++ pip install .
 ```
 
 ## Examples
-The `experiments` directory contains simple usage examples.
+See `experiments` directory.
 
 ## Benchmarks
 TBA
