@@ -4,7 +4,7 @@ Experiments with _Binarized Neural Networks_ in _Pytorch_.
 The code provides basic tools for building binarized neural network as well
 as custom CUDA kernel for faster inference. It contains most of the
 ideas introduced in
-[https://papers.nips.cc/paper/2016/file/d8330f857a17c53d217014ee776bfd50-Paper.pdf](Binarized Neural Networks).
+[Binarized Neural Networks paper](https://papers.nips.cc/paper/2016/file/d8330f857a17c53d217014ee776bfd50-Paper.pdf).
 
 The only layer available right now is `BinaryLinear` which performs
 binarized version of `torch.nn.Linear`. The optimized forward pass kernel
