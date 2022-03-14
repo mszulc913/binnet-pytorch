@@ -19,6 +19,8 @@ class BinaryLinear(torch.nn.Linear):
         This class extends `torch.nn.Linear` to the binary fashion, i.e. it
         quantizes (binarizes) the weights before matrix multiplication.
 
+        Currently, only two-dimensional input matrices are supported.
+
         Warning: This layer does not check if inputs are already binarized.
         If they are not, the results will be incorrect when `use_xor_kernel`
         is set to `False`.

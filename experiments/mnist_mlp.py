@@ -89,12 +89,12 @@ class BinMLPClassifier(pl.LightningModule):
 
 def cli_main():
     pl.seed_everything(1234)
-    batch_size = 64
+    batch_size = 100
     transform = transforms.Compose(
         [
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,)),
-            torch.nn.Flatten(),
+            torch.nn.Flatten(0, -1),
         ]
     )
     mnist_train = MNIST("", train=True, download=True, transform=transform)
@@ -106,8 +106,9 @@ def cli_main():
     model = BinMLPClassifier(
         28 * 28,
         (
-            1000,
-            1000,
+            4096,
+            4096,
+            4096
         ),
         10,
         1e-4,
