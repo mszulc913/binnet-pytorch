@@ -100,16 +100,12 @@ def cli_main():
     mnist_train = MNIST("", train=True, download=True, transform=transform)
     mnist_test = MNIST("", train=False, download=True, transform=transform)
 
-    train_loader = DataLoader(mnist_train, batch_size=batch_size)
-    test_loader = DataLoader(mnist_test, batch_size=batch_size)
+    train_loader = DataLoader(mnist_train, batch_size=batch_size, num_workers=4)
+    test_loader = DataLoader(mnist_test, batch_size=batch_size, num_workers=4)
 
     model = BinMLPClassifier(
         28 * 28,
-        (
-            4096,
-            4096,
-            4096
-        ),
+        (4096, 4096, 4096),
         10,
         1e-4,
     )
