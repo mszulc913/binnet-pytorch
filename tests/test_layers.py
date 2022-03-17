@@ -62,9 +62,9 @@ def test_binary_linear(
 
 
 @pytest.mark.cuda
-def test_binary_linear_xor():
+def test_binary_linear_xnor():
     x = torch.tensor([[1.0, -1.0]], requires_grad=True).cuda()
-    layer = BinaryLinear(2, 1, use_xor_kernel=True)
+    layer = BinaryLinear(2, 1, use_xnor_kernel=True)
     layer.weight = torch.nn.Parameter(torch.tensor([[-0.5, 0.5]]).cuda())
     layer.bias = torch.nn.Parameter(torch.tensor([-0.5]).cuda())
 

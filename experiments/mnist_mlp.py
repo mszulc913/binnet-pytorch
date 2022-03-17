@@ -40,7 +40,7 @@ class BinMLPClassifier(pl.LightningModule):
         hidden_and_activations = []
         for prev_size, size in zip(hidden_sizes, hidden_sizes[1:]):
             hidden_and_activations.append(
-                BinaryLinear(prev_size, size, use_xor_kernel=True)
+                BinaryLinear(prev_size, size, use_xnor_kernel=True)
             )
             hidden_and_activations.append(torch.nn.Hardtanh())
 

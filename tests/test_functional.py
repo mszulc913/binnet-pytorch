@@ -4,7 +4,7 @@ import pytest
 import torch
 import torch.nn.functional as F
 
-from binnet.functional import QuantizeSignSTE, BinLinearXOR, bin_matmul
+from binnet.functional import QuantizeSignSTE, BinLinearXNOR, bin_matmul
 
 
 def test_quantize_ste_forward():
@@ -47,7 +47,7 @@ def test_quantize_ste_backward(x: torch.Tensor, expected_grad: torch.Tensor):
         ),
     ],
 )
-def test_bin_linear_xor_forward(
+def test_bin_linear_xnor_forward(
     x: torch.Tensor,
     weight: torch.Tensor,
     bias: Optional[torch.Tensor],
@@ -58,7 +58,7 @@ def test_bin_linear_xor_forward(
         bias = bias.cuda()
     expected_result = F.linear(x, weight, bias)
 
-    result = BinLinearXOR.apply(x, weight, bias)
+    result = BinLinearXNOR.apply(x, weight, bias)
 
     assert result.shape == expected_result.shape
     assert (result == expected_result).all()
@@ -85,7 +85,7 @@ def test_bin_linear_xor_forward(
         ),
     ],
 )
-def test_bin_linear_xor_backward(
+def test_bin_linear_xnor_backward(
     x: torch.Tensor,
     weight: torch.Tensor,
     bias: Optional[torch.Tensor],
@@ -106,7 +106,7 @@ def test_bin_linear_xor_backward(
     else:
         expected_d_bias = None
 
-    result = BinLinearXOR.apply(x, weight, bias)
+    result = BinLinearXNOR.apply(x, weight, bias)
     result.sum().backward()
 
     assert x.grad.shape == expected_d_x.shape  # type: ignore

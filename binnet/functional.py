@@ -6,7 +6,7 @@ from torch.autograd import Function
 from torch.autograd.function import FunctionCtx
 
 
-class BinLinearXOR(Function):
+class BinLinearXNOR(Function):
     """Optimized binary linear transformation for CUDA supporting devices."""
 
     @staticmethod
@@ -65,11 +65,11 @@ class QuantizeSignSTE(Function):
 
 def bin_matmul(mat1: torch.Tensor, mat2: torch.Tensor) -> torch.Tensor:
     """Binarized matrix product of two tensors.
-.
-    Currently, only two-dimensional inputs are supported.
+    .
+        Currently, only two-dimensional inputs are supported.
 
-    :param mat1: The first tensor to be multiplied.
-    :param mat2: The second tensor to be multiplied.
-    :return: Tensor with the result of the operation.
+        :param mat1: The first tensor to be multiplied.
+        :param mat2: The second tensor to be multiplied.
+        :return: Tensor with the result of the operation.
     """
     return bin_cuda.bin_matmul(mat1, mat2)

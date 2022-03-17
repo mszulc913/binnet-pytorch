@@ -7,7 +7,7 @@ It contains the main ideas introduced in
 
 The only layer available right now is `BinaryLinear` which performs
 binarized version of `torch.nn.Linear`. The optimized forward pass kernel
-is available via `use_xor_kernel` argument.
+is available via `use_xnor_kernel` argument.
 The kernel implementation is quite naive and will be optimized in the future.
 
 
