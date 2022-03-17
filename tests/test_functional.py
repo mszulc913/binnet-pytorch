@@ -4,7 +4,7 @@ import pytest
 import torch
 import torch.nn.functional as F
 
-from binnet.functional import QuantizeSignSTE, BinLinearXOR
+from binnet.functional import QuantizeSignSTE, BinLinearXOR, bin_matmul
 
 
 def test_quantize_ste_forward():
@@ -38,11 +38,10 @@ def test_quantize_ste_backward(x: torch.Tensor, expected_grad: torch.Tensor):
     "x, weight, bias",
     [
         (torch.ones(2, 3), torch.ones(4, 3), None),
-        (torch.ones(5, 2, 3), torch.ones(4, 3), None),
-        (torch.ones(5, 2, 3), torch.ones(4, 3), torch.ones(4)),
-        (torch.ones(10, 100, 200), torch.ones(300, 200), torch.ones(300)),
+        (torch.ones(2, 3), torch.ones(4, 3), torch.ones(4)),
+        (torch.ones(100, 200), torch.ones(300, 200), torch.ones(300)),
         (
-            torch.sign(torch.randn(10, 100, 200)),
+            torch.sign(torch.randn(100, 200)),
             torch.sign(torch.randn(300, 200)),
             torch.sign(torch.randn(300)),
         ),
@@ -70,7 +69,7 @@ def test_bin_linear_xor_forward(
     "x, weight, bias",
     [
         (
-            torch.sign(torch.randn(10, 100, 200, requires_grad=True)),
+            torch.sign(torch.randn(100, 200, requires_grad=True)),
             torch.sign(torch.randn(300, 200, requires_grad=True)),
             None,
         ),
@@ -80,7 +79,7 @@ def test_bin_linear_xor_forward(
             torch.sign(torch.randn(300, requires_grad=True)),
         ),
         (
-            torch.sign(torch.randn(10, 100, 200, requires_grad=True)),
+            torch.sign(torch.randn(100, 200, requires_grad=True)),
             torch.sign(torch.randn(300, 200, requires_grad=True)),
             torch.sign(torch.randn(300, requires_grad=True)),
         ),
@@ -117,3 +116,29 @@ def test_bin_linear_xor_backward(
     if bias is not None:
         assert bias.grad.shape == expected_d_bias.shape
         assert (bias.grad == expected_d_bias).all()
+
+
+@pytest.mark.cuda
+@pytest.mark.parametrize(
+    "mat1, mat2",
+    [
+        (torch.ones(2, 3), torch.ones(3, 4)),
+        (torch.ones(100, 200), torch.ones(200, 300)),
+        (
+            torch.sign(torch.randn(100, 200)),
+            torch.sign(torch.randn(200, 300)),
+        ),
+    ],
+)
+def test_bin_matmul(
+    mat1: torch.Tensor,
+    mat2: torch.Tensor,
+):
+    mat1 = mat1.cuda()
+    mat2 = mat2.cuda()
+    expected_result = torch.matmul(mat1, mat2)
+
+    result = bin_matmul(mat1, mat2)
+
+    assert result.shape == expected_result.shape
+    assert (result == expected_result).all()

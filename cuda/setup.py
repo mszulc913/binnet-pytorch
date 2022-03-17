@@ -2,13 +2,13 @@ from setuptools import setup  # type: ignore
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 setup(
-    name="bin_linear_cuda",
+    name="bin_cuda",
     ext_modules=[
         CUDAExtension(
-            "bin_linear_cuda",
+            "bin_cuda",
             [
-                "bin_linear_cuda.cpp",
-                "bin_linear_cuda_kernel.cu",
+                "bin_cuda.cpp",
+                "bin_cuda_kernel.cu",
             ],
         ),
     ],

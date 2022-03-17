@@ -1,6 +1,6 @@
 from typing import List, Optional, Tuple, cast
 
-import bin_linear_cuda
+import bin_cuda
 import torch
 from torch.autograd import Function
 from torch.autograd.function import FunctionCtx
@@ -20,7 +20,7 @@ class BinLinearXOR(Function):
             ctx.save_for_backward(x, weight, bias)
         else:
             ctx.save_for_backward(x, weight)
-        return bin_linear_cuda.forward(x, weight, bias)
+        return bin_cuda.bin_linear(x, weight, bias)
 
     @staticmethod
     def backward(  # type: ignore
@@ -61,3 +61,15 @@ class QuantizeSignSTE(Function):
         out = torch.ones_like(x)
         out[torch.abs(x) > 1] = 0
         return grad_output * out
+
+
+def bin_matmul(mat1: torch.Tensor, mat2: torch.Tensor) -> torch.Tensor:
+    """Binarized matrix product of two tensors.
+.
+    Currently, only two-dimensional inputs are supported.
+
+    :param mat1: The first tensor to be multiplied.
+    :param mat2: The second tensor to be multiplied.
+    :return: Tensor with the result of the operation.
+    """
+    return bin_cuda.bin_matmul(mat1, mat2)
