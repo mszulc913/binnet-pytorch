@@ -28,11 +28,23 @@ CXX=g++ pip install .
 ```
 
 ## Examples
-See `experiments` directory.
+[experiments/mnist_mlp.py](experiments/mnist_mlp.py) contains example experiment with MLP on MNIST.
 
 ## Benchmarks
-TBA
+Benchmarks were conducted on `Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz` / `GeForce GTX 1650 Mobile`.
+Custom CUDA XNOR kernel was compared to cuBLAS kernel on the following problems:
+- (8196, 8916) x (8196, 8916) matrix multiplication
+- MLP ((4096, 4096, 4096) hidden units) inference on the MNIST test set (batch size = 100); first
+layer and the softmax projection layer were not binarized
+
+Each experiment was repeated 100 times with `torch.utils.benchmark`.
+
+| Problem               | cuBLAS    | XNOR      |
+|-----------------------|-----------|-----------|
+| Matrix multiplication | 424.57 ms | 154.42 ms |
+| MLP on MNIST test     | 1.48 s    | 1.37 s    |
+
+Full report is available in the `experiments` folder.
 
 
-
-
+Benchmarks were produced with [experiments/benchmark.py](experiments/benchmark.py).

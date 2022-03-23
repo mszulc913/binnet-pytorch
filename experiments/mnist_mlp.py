@@ -1,4 +1,4 @@
-from typing import Sequence, Tuple
+from typing import Sequence, Tuple, List
 
 import torch.nn
 import torch.nn.functional as F
@@ -19,6 +19,7 @@ class BinMLPClassifier(pl.LightningModule):
         hidden_sizes: Sequence[int],
         n_classes: int,
         learning_rate: float,
+        use_xnor: bool,
     ):
         """Multi Layer Perceptron Classifier with binarized hidden layers.
 
@@ -29,6 +30,7 @@ class BinMLPClassifier(pl.LightningModule):
         :param hidden_sizes: List of sizes of hidden layers.
         :param n_classes: Number of classes to predict.
         :param learning_rate: Learning rate of ADAM optimizer.
+        :param use_xnor: True to use custom XNOR CUDA kernel.
         """
         if len(hidden_sizes) == 0:
             raise ValueError(
@@ -37,10 +39,10 @@ class BinMLPClassifier(pl.LightningModule):
 
         super().__init__()
 
-        hidden_and_activations = []
+        hidden_and_activations: List[torch.nn.Module] = []
         for prev_size, size in zip(hidden_sizes, hidden_sizes[1:]):
             hidden_and_activations.append(
-                BinaryLinear(prev_size, size, use_xnor_kernel=True)
+                BinaryLinear(prev_size, size, use_xnor_kernel=use_xnor)
             )
             hidden_and_activations.append(torch.nn.Hardtanh())
 
@@ -55,7 +57,7 @@ class BinMLPClassifier(pl.LightningModule):
 
         self.accuracy = torchmetrics.Accuracy()
 
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:  # type: ignore
         x = self.input_proj(x)
         x = F.hardtanh(x)
         for layer in self.hidden:
@@ -64,7 +66,7 @@ class BinMLPClassifier(pl.LightningModule):
         x = x.squeeze(-2)
         return x, torch.argmax(x, dim=-1)
 
-    def training_step(
+    def training_step(  # type: ignore
         self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int
     ) -> torch.Tensor:
         x, y = batch
@@ -73,7 +75,7 @@ class BinMLPClassifier(pl.LightningModule):
         self.log("acc", self.accuracy, prog_bar=True)
         return self.loss(probs, y)
 
-    def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int):
+    def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int):  # type: ignore
         x, y = batch
         probs, preds = self.forward(x)
         loss = self.loss(probs, y)
@@ -103,12 +105,7 @@ def cli_main():
     train_loader = DataLoader(mnist_train, batch_size=batch_size, num_workers=4)
     test_loader = DataLoader(mnist_test, batch_size=batch_size, num_workers=4)
 
-    model = BinMLPClassifier(
-        28 * 28,
-        (4096, 4096, 4096),
-        10,
-        1e-4,
-    )
+    model = BinMLPClassifier(28 * 28, (4096, 4096, 4096), 10, 1e-4, True)
 
     trainer = pl.Trainer(max_epochs=1, gpus=1)
     trainer.fit(model, train_loader)
