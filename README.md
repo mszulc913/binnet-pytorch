@@ -35,7 +35,7 @@ Benchmarks were conducted on `Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz` / `GeFor
 Custom CUDA XNOR kernel was compared to cuBLAS kernel on the following problems:
 - (8196, 8916) x (8196, 8916) matrix multiplication
 - MLP ((4096, 4096, 4096) hidden units) inference on the MNIST test set (batch size = 100); first
-layer and the softmax projection layer were not binarized
+layer and softmax projection layers were not binarized
 
 Each experiment was repeated 100 times with `torch.utils.benchmark`.
 
