@@ -6,8 +6,8 @@ import pytorch_lightning as pl
 import torchmetrics
 from pytorch_lightning.utilities.types import EPOCH_OUTPUT
 from torch.utils.data import DataLoader
-from torchvision.datasets import MNIST
-from torchvision.transforms import transforms
+from torchvision.datasets import MNIST  # type: ignore
+from torchvision.transforms import transforms  # type: ignore
 
 from binnet.layers import BinaryLinear
 
@@ -57,7 +57,10 @@ class BinMLPClassifier(pl.LightningModule):
 
         self.accuracy = torchmetrics.Accuracy()
 
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:  # type: ignore
+    def forward(  # type: ignore
+        self,
+        x: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         x = self.input_proj(x)
         x = F.hardtanh(x)
         for layer in self.hidden:
@@ -75,7 +78,11 @@ class BinMLPClassifier(pl.LightningModule):
         self.log("acc", self.accuracy, prog_bar=True)
         return self.loss(probs, y)
 
-    def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int):  # type: ignore
+    def test_step(  # type: ignore
+        self,
+        batch: Tuple[torch.Tensor, torch.Tensor],
+        batch_idx: int
+    ):
         x, y = batch
         probs, preds = self.forward(x)
         loss = self.loss(probs, y)

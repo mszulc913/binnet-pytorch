@@ -41,8 +41,8 @@ Each experiment was repeated 100 times with `torch.utils.benchmark`.
 
 | Problem               | cuBLAS    | XNOR      |
 |-----------------------|-----------|-----------|
-| Matrix multiplication | 424.57 ms | 154.42 ms |
-| MLP on MNIST test     | 1.48 s    | 1.37 s    |
+| Matrix multiplication | 425.21 ms | 155.33 ms |
+| MLP on MNIST test     | 772.96 ms | 690.84 ms |
 
 Full report is available in the `experiments` folder.
 
