@@ -1,6 +1,6 @@
 from typing import List, Optional, Tuple, cast
 
-import bin_cuda
+import bin_cuda  # type: ignore
 import torch
 from torch.autograd import Function
 from torch.autograd.function import FunctionCtx
