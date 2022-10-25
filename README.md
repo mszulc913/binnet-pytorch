@@ -1,7 +1,7 @@
 # Binnet-CUDA
 Experiments with _Binarized Neural Networks_ in _Pytorch_.
 
-The code provides easy and clean implementation of Binarized Neural Netwoks with custom CUDA kernel for forward pass.
+The code provides clean implementation of Binarized Neural Netwoks with custom CUDA kernel for forward pass.
 It contains the main ideas introduced in
 [Binarized Neural Networks paper](https://papers.nips.cc/paper/2016/file/d8330f857a17c53d217014ee776bfd50-Paper.pdf).
 
@@ -21,14 +21,14 @@ pip install -r requirements.txt
 ```
 cd cuda && pip install .
 ```
-If this fails you can try to explicitly specify the compiler you want to use via environment
-variable `CXX`, e.g.:
+If this fails, you can try to explicitly specify the compiler you want to use via the `CXX` environment
+variable, for example:
 ```shell
 CXX=g++ pip install .
 ```
 
 ## Examples
-[experiments/mnist_mlp.py](experiments/mnist_mlp.py) contains example experiment with MLP on MNIST.
+[experiments/mnist_mlp.py](experiments/mnist_mlp.py) contains example experiment with a MLP network on the MNIST dataset.
 
 ## Benchmarks
 Benchmarks were conducted on `Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz` / `GeForce GTX 1650 Mobile`.
